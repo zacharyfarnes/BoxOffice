@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  PopularListView.swift
 //  BoxOffice
 //
 //  Created by Zachary Farnes on 26/12/2023.
@@ -7,16 +7,16 @@
 
 import SwiftUI
 
-struct ContentView: View {
+struct PopularListView: View {
     @State private var movies = [Movie]()
     
     @State private var showingAlert = false
     @State private var alertMessage = ""
     
     var body: some View {
-        NavigationStack {
-            List {
-                ForEach(movies) { movie in
+        List {
+            ForEach(movies) { movie in
+                NavigationLink(value: movie) {
                     HStack(spacing: 15) {
                         AsyncImage(url: movie.imageURL) { image in
                             image
@@ -26,7 +26,7 @@ struct ContentView: View {
                             
                         }
                         .frame(height: 100)
-
+                        
                         VStack(alignment: .leading) {
                             Text(movie.title)
                                 .bold()
@@ -39,22 +39,22 @@ struct ContentView: View {
                     }
                 }
             }
-            .listStyle(.plain)
-            .refreshable {
-                await getMovies()
-            }
-            .task {
-                await getMovies()
-            }
-            .alert(isPresented: $showingAlert) {
-                Alert(
-                    title: Text("Error loading movies"),
-                    message: Text(alertMessage),
-                    dismissButton: .default(Text("OK"))
-                )
-            }
-            .navigationTitle("Popular")
         }
+        .listStyle(.plain)
+        .refreshable {
+            await getMovies()
+        }
+        .task {
+            await getMovies()
+        }
+        .alert(isPresented: $showingAlert) {
+            Alert(
+                title: Text("Error loading movies"),
+                message: Text(alertMessage),
+                dismissButton: .default(Text("OK"))
+            )
+        }
+        .navigationTitle("Popular")
     }
     
     func getMovies() async {
@@ -93,40 +93,6 @@ struct ContentView: View {
     }
 }
 
-struct Result: Codable {
-    let movies: [Movie]
-    
-    enum CodingKeys: String, CodingKey {
-        case movies = "results"
-    }
-}
-
-struct Movie: Codable, Identifiable {
-    let id: Int
-    let title: String
-    let overview: String
-    let posterPath: String
-    
-    var imageURL: URL {
-        return URL(string: "https://image.tmdb.org/t/p/w500/" + posterPath)!
-    }
-}
-
-enum BOError: Error {
-    case invalidURL, invalidResponse, invalidData
-    
-    var alertMessage: String {
-        switch self {
-        case .invalidURL:
-            return "The URL for obtaining movies is invalid."
-        case .invalidResponse:
-            return "The response received from the server is invalid."
-        case .invalidData:
-            return "The data obtained from the server is invalid."
-        }
-    }
-}
-
 #Preview {
-    ContentView()
+    PopularListView()
 }
