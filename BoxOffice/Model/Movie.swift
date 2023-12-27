@@ -16,12 +16,14 @@ struct Movie: Codable, Identifiable, Hashable {
     let backdropPath: String
     let voteAverage: Float
     
-    var displayDate: String {
+    var date: Date {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
-        guard let date = formatter.date(from: releaseDate) else {
-            return "Unknown Date"
-        }
+        return formatter.date(from: releaseDate)!
+    }
+    
+    var displayDate: String {
+        let formatter = DateFormatter()
         formatter.dateFormat = "E, d MMM y"
         return formatter.string(from: date)
     }

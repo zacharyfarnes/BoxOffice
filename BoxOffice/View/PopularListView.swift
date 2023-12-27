@@ -54,7 +54,6 @@ struct PopularListView: View {
                 dismissButton: .default(Text("OK"))
             )
         }
-        .navigationTitle("Popular")
     }
     
     func getMovies() async {

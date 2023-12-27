@@ -9,9 +9,12 @@ import SwiftUI
 
 @main
 struct BoxOfficeApp: App {
+    @StateObject var favorites = Favorites()
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            MainView()
+                .environmentObject(favorites)
         }
     }
 }

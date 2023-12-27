@@ -8,11 +8,38 @@
 import SwiftUI
 
 struct MovieDetailView: View {
+    @EnvironmentObject var favorites: Favorites
+    
     let movie: Movie
     
     var body: some View {
         ScrollView {
             MovieTitleView(movie: movie)
+            
+            Button(action: {
+                if favorites.contains(movie) {
+                    favorites.remove(movie)
+                } else {
+                    favorites.add(movie)
+                }
+            }, label: {
+                favorites.contains(movie) ?
+                Text("Remove from Favourites")
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 5)
+                    .transaction { transaction in
+                        transaction.animation = nil
+                    }
+                :
+                Text("Add to Favourites")
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 5)
+                    .transaction { transaction in
+                        transaction.animation = nil
+                    }
+            })
+            .buttonStyle(.bordered)
+            .padding()
             
             VStack(alignment: .leading) {
                 VStack(alignment: .leading) {
@@ -22,7 +49,7 @@ struct MovieDetailView: View {
                     Text(movie.overview)
                         .foregroundStyle(.secondary)
                 }
-                .padding()
+                .padding([.horizontal, .bottom])
                 
                 VStack(alignment: .leading) {
                     Text("Cast")
@@ -31,13 +58,13 @@ struct MovieDetailView: View {
                         .padding(.leading)
                     ActorListView(movie: movie)
                 }
-                .padding(.bottom, 50)
             }
         }
-        .ignoresSafeArea()
+        .ignoresSafeArea(edges: .top)
     }
 }
 
 #Preview {
     MovieDetailView(movie: .example)
+        .environmentObject(Favorites())
 }
