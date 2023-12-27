@@ -13,6 +13,7 @@ struct Movie: Codable, Identifiable, Hashable {
     let overview: String
     let releaseDate: String
     let posterPath: String
+    let backdropPath: String
     let voteAverage: Float
     
     var displayDate: String {
@@ -25,8 +26,12 @@ struct Movie: Codable, Identifiable, Hashable {
         return formatter.string(from: date)
     }
     
-    var imageURL: URL {
+    var posterURL: URL {
         return URL(string: "https://image.tmdb.org/t/p/w500/" + posterPath)!
+    }
+    
+    var backdropURL: URL {
+        return URL(string: "https://image.tmdb.org/t/p/w500/" + backdropPath)!
     }
     
     static let example = Movie(
@@ -35,6 +40,7 @@ struct Movie: Codable, Identifiable, Hashable {
         overview: "Princess Leia is captured and held hostage by the evil Imperial forces in their effort to take over the galactic Empire. Venturesome Luke Skywalker and dashing captain Han Solo team together with the loveable robot duo R2-D2 and C-3PO to rescue the beautiful princess and restore peace and justice in the Empire.", 
         releaseDate: "1977-05-25",
         posterPath: "6FfCtAuVAW8XJjZ7eWeLibRLWTw.jpg",
+        backdropPath: "4qCqAdHcNKeAHcK8tJ8wNJZa9cx.jpg",
         voteAverage: 8.205
     )
 }

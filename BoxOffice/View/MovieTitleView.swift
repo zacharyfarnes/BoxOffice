@@ -20,7 +20,7 @@ struct MovieTitleView: View {
     )
     
     var body: some View {
-        AsyncImage(url: movie.imageURL) { image in
+        AsyncImage(url: movie.posterURL) { image in
             image
                 .resizable()
                 .aspectRatio(contentMode: .fit)
@@ -32,7 +32,7 @@ struct MovieTitleView: View {
                 gradient
                 
                 HStack(alignment: .top, spacing: 20) {
-                    AsyncImage(url: movie.imageURL) { image in
+                    AsyncImage(url: movie.posterURL) { image in
                         image
                             .resizable()
                             .aspectRatio(contentMode: .fit)

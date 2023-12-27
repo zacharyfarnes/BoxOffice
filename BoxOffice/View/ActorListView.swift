@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ActorsView: View {
+struct ActorListView: View {
     let movie: Movie
     @State private var actors = [Actor]()
     
@@ -15,10 +15,27 @@ struct ActorsView: View {
     @State private var alertMessage = ""
     
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        ScrollView(.horizontal) {
+            LazyHStack {
+                ForEach(actors) { actor in
+                    ActorView(actor: actor)
+                }
+            }
+            .padding([.leading, .bottom])
+        }
+        .task {
+            await getActors()
+        }
+        .alert(isPresented: $showingAlert) {
+            Alert(
+                title: Text("Error loading actors"),
+                message: Text(alertMessage),
+                dismissButton: .default(Text("OK"))
+            )
+        }
     }
     
-    func getActots() async {
+    func getActors() async {
         do {
             actors = try await fetchActorsFromAPI()
         } catch {
@@ -47,7 +64,7 @@ struct ActorsView: View {
         do {
             let decoder = JSONDecoder()
             decoder.keyDecodingStrategy = .convertFromSnakeCase
-            return try decoder.decode(Actors.self, from: data).actors
+            return try decoder.decode(Credits.self, from: data).actors
         } catch {
             throw BOError.invalidData
         }
@@ -55,5 +72,5 @@ struct ActorsView: View {
 }
 
 #Preview {
-    ActorsView(movie: .example)
+    ActorListView(movie: .example)
 }

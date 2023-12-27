@@ -7,10 +7,18 @@
 
 import Foundation
 
-struct Result: Codable {
+struct PopularMovies: Codable {
     let movies: [Movie]
     
     enum CodingKeys: String, CodingKey {
         case movies = "results"
+    }
+}
+
+struct Credits: Codable {
+    let actors: [Actor]
+    
+    enum CodingKeys: String, CodingKey {
+        case actors = "cast"
     }
 }

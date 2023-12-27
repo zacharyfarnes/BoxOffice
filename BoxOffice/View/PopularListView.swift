@@ -18,7 +18,7 @@ struct PopularListView: View {
             ForEach(movies) { movie in
                 NavigationLink(value: movie) {
                     HStack(spacing: 15) {
-                        AsyncImage(url: movie.imageURL) { image in
+                        AsyncImage(url: movie.posterURL) { image in
                             image
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
@@ -86,7 +86,7 @@ struct PopularListView: View {
         do {
             let decoder = JSONDecoder()
             decoder.keyDecodingStrategy = .convertFromSnakeCase
-            return try decoder.decode(Result.self, from: data).movies
+            return try decoder.decode(PopularMovies.self, from: data).movies
         } catch {
             throw BOError.invalidData
         }

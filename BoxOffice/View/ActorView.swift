@@ -8,11 +8,30 @@
 import SwiftUI
 
 struct ActorView: View {
+    let actor: Actor
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack {
+            AsyncImage(url: actor.profileURL) { image in
+                image
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+            } placeholder: {
+                Image(systemName: "camera")
+            }
+            .frame(height: 125)
+            
+            Text(actor.name)
+                .bold()
+                .lineLimit(1)
+            Text(actor.character)
+                .foregroundStyle(.secondary)
+                .lineLimit(1)
+        }
+        .frame(width: 125)
     }
 }
 
 #Preview {
-    ActorView()
+    ActorView(actor: .example)
 }
