@@ -25,6 +25,7 @@ struct MovieDetailView: View {
             }, label: {
                 favorites.contains(movie) ?
                 Text("Remove from Favourites")
+                    .bold()
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 5)
                     .transaction { transaction in
@@ -32,6 +33,7 @@ struct MovieDetailView: View {
                     }
                 :
                 Text("Add to Favourites")
+                    .bold()
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 5)
                     .transaction { transaction in
