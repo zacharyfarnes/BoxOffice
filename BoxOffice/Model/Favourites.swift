@@ -22,6 +22,11 @@ class Favorites: ObservableObject {
         movies = []
     }
     
+    // For preview purposes only
+    private init(movies: Set<Int>) {
+        self.movies = movies
+    }
+    
     func get() -> Set<Int> {
         return movies
     }
@@ -47,4 +52,6 @@ class Favorites: ObservableObject {
             UserDefaults.standard.set(data, forKey: saveKey)
         }
     }
+    
+    static let example = Favorites(movies: [11, 1891, 1892])
 }

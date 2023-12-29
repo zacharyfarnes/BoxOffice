@@ -129,5 +129,5 @@ struct FavouriteListView: View {
 
 #Preview {
     FavouriteListView()
-        .environmentObject(Favorites())
+        .environmentObject(Favorites.example)
 }
