@@ -25,7 +25,8 @@ struct MovieTitleView: View {
                 .resizable()
                 .aspectRatio(contentMode: .fit)
         } placeholder: {
-            
+            Color.secondary
+                .aspectRatio(contentMode: .fit)
         }
         .overlay {
             ZStack(alignment: .bottom) {
@@ -37,9 +38,15 @@ struct MovieTitleView: View {
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                     } placeholder: {
-                        
+                        Color.secondary
+                            .overlay {
+                                Image(systemName: "camera")
+                                    .foregroundColor(.white)
+                            }
                     }
+                    .frame(width: 66.67)
                     .border(.white, width: 1)
+                    
                     
                     VStack(alignment: .leading, spacing: 10) {
                         VStack(alignment: .leading, spacing: 5) {

@@ -17,9 +17,13 @@ struct FavouriteRowView: View {
                     .resizable()
                     .aspectRatio(contentMode: .fit)
             } placeholder: {
-                Image(systemName: "camera")
+                Color.secondary
+                    .overlay {
+                        Image(systemName: "camera")
+                            .foregroundColor(.white)
+                    }
             }
-            .frame(height: 200)
+            .frame(width: 140, height: 210)
             
             Text(movie.title)
                 .lineLimit(2)

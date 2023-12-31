@@ -19,7 +19,8 @@ struct ActorRowView: View {
             } placeholder: {
                 Image(systemName: "camera")
             }
-            .frame(height: 125)
+            .frame(width: 80, height: 120)
+            .background(.placeholder)
             
             Text(actor.name)
                 .bold()
