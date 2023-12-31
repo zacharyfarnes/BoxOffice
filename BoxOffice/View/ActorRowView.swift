@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ActorView: View {
+struct ActorRowView: View {
     let actor: Actor
     
     var body: some View {
@@ -33,5 +33,5 @@ struct ActorView: View {
 }
 
 #Preview {
-    ActorView(actor: .example)
+    ActorRowView(actor: .example)
 }

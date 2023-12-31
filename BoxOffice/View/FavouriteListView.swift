@@ -9,6 +9,8 @@ import SwiftUI
 
 struct FavouriteListView: View {
     @EnvironmentObject var favorites: Favorites
+    @State private var navPath = [Movie]()
+    
     @State private var movies = [Movie]()
     
     @State private var showingAlert = false
@@ -34,48 +36,54 @@ struct FavouriteListView: View {
     }
     
     var body: some View {
-        Group {
-            if !sortedMovies.isEmpty {
-                ScrollView {
-                    LazyVGrid(columns: columns, spacing: 20) {
-                        ForEach(sortedMovies, id: \.self) { movie in
-                            NavigationLink(value: movie) {
-                                FavouriteView(movie: movie)
-                                    .foregroundColor(.primary)
+        NavigationStack(path: $navPath) {
+            Group {
+                if !sortedMovies.isEmpty {
+                    ScrollView {
+                        LazyVGrid(columns: columns, spacing: 20) {
+                            ForEach(sortedMovies, id: \.self) { movie in
+                                NavigationLink(value: movie) {
+                                    FavouriteRowView(movie: movie)
+                                        .foregroundColor(.primary)
+                                }
                             }
                         }
+                        .padding()
                     }
-                    .padding()
-                }
-                .toolbar {
-                    Button {
-                        showingSortOptions = true
-                    } label: {
-                        Label("Change sort order", systemImage: "arrow.up.arrow.down")
+                    .toolbar {
+                        Button {
+                            showingSortOptions = true
+                        } label: {
+                            Label("Change sort order", systemImage: "arrow.up.arrow.down")
+                        }
                     }
+                    .confirmationDialog("Sort order", isPresented: $showingSortOptions) {
+                        Button("Default") { sortType = .default }
+                        Button("Alphabetical") { sortType = .alphabetical }
+                        Button("Release Date") { sortType = .releaseDate }
+                    }
+                } else {
+                    Text("No Favourites Added")
+                        .foregroundStyle(.secondary)
                 }
-                .confirmationDialog("Sort order", isPresented: $showingSortOptions) {
-                    Button("Default") { sortType = .default }
-                    Button("Alphabetical") { sortType = .alphabetical }
-                    Button("Release Date") { sortType = .releaseDate }
-                }
-            } else {
-                Text("No Favourites Added")
-                    .foregroundStyle(.secondary)
             }
-        }
-        .refreshable {
-            await getMovies()
-        }
-        .task {
-            await getMovies()
-        }
-        .alert(isPresented: $showingAlert) {
-            Alert(
-                title: Text("Error loading favourites"),
-                message: Text(alertMessage),
-                dismissButton: .default(Text("OK"))
-            )
+            .navigationTitle("Favourites")
+            .refreshable {
+                await getMovies()
+            }
+            .task {
+                await getMovies()
+            }
+            .alert(isPresented: $showingAlert) {
+                Alert(
+                    title: Text("Error loading favourites"),
+                    message: Text(alertMessage),
+                    dismissButton: .default(Text("OK"))
+                )
+            }
+            .navigationDestination(for: Movie.self) { movie in
+                MovieDetailView(movie: movie)
+            }
         }
     }
     

@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ActorListView: View {
     let movie: Movie
+    
     @State private var actors = [Actor]()
     
     @State private var showingAlert = false
@@ -18,7 +19,7 @@ struct ActorListView: View {
         ScrollView(.horizontal) {
             LazyHStack {
                 ForEach(actors) { actor in
-                    ActorView(actor: actor)
+                    ActorRowView(actor: actor)
                 }
             }
             .padding([.leading, .bottom])

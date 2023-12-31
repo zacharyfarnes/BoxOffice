@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct FavouriteView: View {
+struct FavouriteRowView: View {
     let movie: Movie
     
     var body: some View {
@@ -34,5 +34,5 @@ struct FavouriteView: View {
 }
 
 #Preview {
-    FavouriteView(movie: .example)
+    FavouriteRowView(movie: .example)
 }

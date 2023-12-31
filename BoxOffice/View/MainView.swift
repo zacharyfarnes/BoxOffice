@@ -11,12 +11,12 @@ struct MainView: View {
     
     var body: some View {
         TabView {
-            PopularMoviesView()
+            PopularListView()
                 .tabItem {
                     Label("Popular", systemImage: "star")
                 }
 
-            FavouriteMoviesView()
+            FavouriteListView()
                 .tabItem {
                     Label("Favourites", systemImage: "heart")
                 }

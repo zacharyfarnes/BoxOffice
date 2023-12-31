@@ -8,51 +8,40 @@
 import SwiftUI
 
 struct PopularListView: View {
+    @State private var navPath = [Movie]()
+    
     @State private var movies = [Movie]()
     
     @State private var showingAlert = false
     @State private var alertMessage = ""
     
     var body: some View {
-        List {
-            ForEach(movies) { movie in
-                NavigationLink(value: movie) {
-                    HStack(spacing: 15) {
-                        AsyncImage(url: movie.posterURL) { image in
-                            image
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                        } placeholder: {
-                            
-                        }
-                        .frame(height: 100)
-                        
-                        VStack(alignment: .leading) {
-                            Text(movie.title)
-                                .bold()
-                                .lineLimit(2)
-                            Text(movie.overview)
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                                .lineLimit(4)
-                        }
+        NavigationStack(path: $navPath) {
+            List {
+                ForEach(movies) { movie in
+                    NavigationLink(value: movie) {
+                        MovieRowView(movie: movie)
                     }
                 }
             }
-        }
-        .listStyle(.plain)
-        .refreshable {
-            await getMovies()
-        }
-        .task {
-            await getMovies()
-        }
-        .alert(isPresented: $showingAlert) {
-            Alert(
-                title: Text("Error loading movies"),
-                message: Text(alertMessage),
-                dismissButton: .default(Text("OK"))
-            )
+            .listStyle(.plain)
+            .navigationTitle("Popular")
+            .refreshable {
+                await getMovies()
+            }
+            .task {
+                await getMovies()
+            }
+            .alert(isPresented: $showingAlert) {
+                Alert(
+                    title: Text("Error loading movies"),
+                    message: Text(alertMessage),
+                    dismissButton: .default(Text("OK"))
+                )
+            }
+            .navigationDestination(for: Movie.self) { movie in
+                MovieDetailView(movie: movie)
+            }
         }
     }
     
