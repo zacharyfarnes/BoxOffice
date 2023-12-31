@@ -8,17 +8,12 @@
 import SwiftUI
 
 struct PopularListView: View {
-    @State private var navPath = [Movie]()
-    
-    @State private var movies = [Movie]()
-    
-    @State private var showingAlert = false
-    @State private var alertMessage = ""
+    @StateObject private var viewModel = ViewModel()
     
     var body: some View {
-        NavigationStack(path: $navPath) {
+        NavigationStack(path: $viewModel.navPath) {
             List {
-                ForEach(movies) { movie in
+                ForEach(viewModel.movies) { movie in
                     NavigationLink(value: movie) {
                         MovieRowView(movie: movie)
                     }
@@ -27,56 +22,21 @@ struct PopularListView: View {
             .listStyle(.plain)
             .navigationTitle("Popular")
             .refreshable {
-                await getMovies()
+                await viewModel.getMovies()
             }
             .task {
-                await getMovies()
+                await viewModel.getMovies()
             }
-            .alert(isPresented: $showingAlert) {
+            .alert(isPresented: $viewModel.showingAlert) {
                 Alert(
                     title: Text("Error loading movies"),
-                    message: Text(alertMessage),
+                    message: Text(viewModel.alertMessage),
                     dismissButton: .default(Text("OK"))
                 )
             }
             .navigationDestination(for: Movie.self) { movie in
                 MovieDetailView(movie: movie)
             }
-        }
-    }
-    
-    func getMovies() async {
-        do {
-            movies = try await fetchMoviesFromAPI()
-        } catch {
-            if let error = error as? BOError {
-                alertMessage = error.alertMessage
-            } else {
-                alertMessage = "An unknown error has occured."
-            }
-            showingAlert.toggle()
-        }
-    }
-    
-    func fetchMoviesFromAPI() async throws -> [Movie] {
-        let urlString = "https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc&api_key=" + Constants.apiKey
-        
-        guard let url = URL(string: urlString) else {
-            throw BOError.invalidURL
-        }
-        
-        let (data, response) = try await URLSession.shared.data(from: url)
-        
-        guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
-            throw BOError.invalidResponse
-        }
-        
-        do {
-            let decoder = JSONDecoder()
-            decoder.keyDecodingStrategy = .convertFromSnakeCase
-            return try decoder.decode(PopularMovies.self, from: data).movies
-        } catch {
-            throw BOError.invalidData
         }
     }
 }
