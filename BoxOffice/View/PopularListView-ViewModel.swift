@@ -16,6 +16,16 @@ extension PopularListView {
         @Published var showingAlert = false
         @Published var alertMessage = ""
         
+        @Published var searchText = ""
+        
+        var sortedMovies: [Movie] {
+            if searchText.isEmpty {
+                return movies
+            } else {
+                return movies.filter { $0.title.localizedCaseInsensitiveContains(searchText) }
+            }
+        }
+        
         func getMovies() async {
             do {
                 movies = try await fetchMoviesFromAPI()

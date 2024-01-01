@@ -16,6 +16,8 @@ struct FavouriteListView: View {
     @State private var showingAlert = false
     @State private var alertMessage = ""
     
+    @State private var searchText = ""
+    
     @State private var sortType = SortType.default
     @State private var showingSortOptions = false
     
@@ -25,13 +27,19 @@ struct FavouriteListView: View {
     ]
     
     var sortedMovies: [Movie] {
+        var sortedMovies = movies
+        
+        if !searchText.isEmpty {
+            sortedMovies = movies.filter { $0.title.localizedCaseInsensitiveContains(searchText) }
+        }
+        
         switch sortType {
         case .default:
-            return movies.sorted { $0.id < $1.id }
+            return sortedMovies.sorted { $0.id < $1.id }
         case .alphabetical:
-            return movies.sorted { $0.title < $1.title }
+            return sortedMovies.sorted { $0.title < $1.title }
         case .releaseDate:
-            return movies.sorted { $0.date < $1.date }
+            return sortedMovies.sorted { $0.date < $1.date }
         }
     }
     
@@ -63,10 +71,15 @@ struct FavouriteListView: View {
                         Button("Release Date") { sortType = .releaseDate }
                     }
                 } else {
-                    Text("No Favourites Added")
-                        .foregroundStyle(.secondary)
+                    if searchText.isEmpty {
+                        Text("No Favourites Added")
+                            .foregroundStyle(.secondary)
+                    } else {
+                        ContentUnavailableView.search
+                    }
                 }
             }
+            .searchable(text: $searchText)
             .navigationTitle("Favourites")
             .refreshable {
                 await getMovies()

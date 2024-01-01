@@ -12,15 +12,27 @@ struct PopularListView: View {
     
     var body: some View {
         NavigationStack(path: $viewModel.navPath) {
-            List {
-                ForEach(viewModel.movies) { movie in
-                    NavigationLink(value: movie) {
-                        MovieRowView(movie: movie)
+            Group {
+                if !viewModel.sortedMovies.isEmpty {
+                    List {
+                        ForEach(viewModel.sortedMovies) { movie in
+                            NavigationLink(value: movie) {
+                                MovieRowView(movie: movie)
+                            }
+                        }
+                    }
+                    .listStyle(.plain)
+                } else {
+                    if viewModel.searchText.isEmpty {
+                        Text("No Movies Found")
+                            .foregroundStyle(.secondary)
+                    } else {
+                        ContentUnavailableView.search
                     }
                 }
             }
-            .listStyle(.plain)
             .navigationTitle("Popular")
+            .searchable(text: $viewModel.searchText)
             .refreshable {
                 await viewModel.getMovies()
             }
