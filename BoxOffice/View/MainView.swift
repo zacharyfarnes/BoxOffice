@@ -15,6 +15,11 @@ struct MainView: View {
                 .tabItem {
                     Label("Popular", systemImage: "star")
                 }
+            
+            SearchListView()
+                .tabItem {
+                    Label("Search", systemImage: "magnifyingglass")
+                }
 
             FavouriteListView()
                 .tabItem {

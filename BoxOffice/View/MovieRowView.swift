@@ -17,9 +17,13 @@ struct MovieRowView: View {
                     .resizable()
                     .aspectRatio(contentMode: .fit)
             } placeholder: {
-                
+                Color.secondary
+                .overlay {
+                    Image(systemName: "camera")
+                        .foregroundColor(.white)
+                }
             }
-            .frame(height: 100)
+            .frame(width: 66.67, height: 100)
             
             VStack(alignment: .leading) {
                 Text(movie.title)

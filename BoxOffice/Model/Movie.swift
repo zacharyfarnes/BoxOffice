@@ -12,28 +12,31 @@ struct Movie: Codable, Identifiable, Hashable {
     let title: String
     let overview: String
     let releaseDate: String
-    let posterPath: String
-    let backdropPath: String
+    let posterPath: String?
+    let backdropPath: String?
     let voteAverage: Float
     
-    var date: Date {
+    var date: Date? {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
-        return formatter.date(from: releaseDate)!
+        return formatter.date(from: releaseDate)
     }
     
     var displayDate: String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "E, d MMM y"
-        return formatter.string(from: date)
+        if let date {
+            let formatter = DateFormatter()
+            formatter.dateFormat = "E, d MMM y"
+            return formatter.string(from: date)
+        }
+        return "Unknown"
     }
     
     var posterURL: URL {
-        return URL(string: "https://image.tmdb.org/t/p/w500/" + posterPath)!
+        return URL(string: "https://image.tmdb.org/t/p/w500/" + (posterPath ?? ""))!
     }
     
     var backdropURL: URL {
-        return URL(string: "https://image.tmdb.org/t/p/w500/" + backdropPath)!
+        return URL(string: "https://image.tmdb.org/t/p/w500/" + (backdropPath ?? ""))!
     }
     
     static let example = Movie(

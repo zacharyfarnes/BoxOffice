@@ -34,7 +34,13 @@ extension FavouriteListView {
             case .alphabetical:
                 return sortedMovies.sorted { $0.title < $1.title }
             case .releaseDate:
-                return sortedMovies.sorted { $0.date < $1.date }
+                return sortedMovies.sorted { (lhs: Movie, rhs: Movie) -> Bool in
+                    switch (lhs.date, rhs.date) {
+                    case let(l?, r?): return l < r
+                    case (nil, _): return false
+                    case (_?, nil): return true
+                    }
+                }
             }
         }
         
